@@ -15,6 +15,7 @@ class EncoderRNN(nn.Module):
         embedded = self.embedding(input).view(1, 1, -1)
         output = embedded
         output, hidden = self.gru(output, hidden)
+        # print(f"GRU Output size is {output.shape}")  # torch.Size([1, 1, 256])
         return output, hidden
 
     def initHidden(self):

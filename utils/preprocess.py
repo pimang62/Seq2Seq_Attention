@@ -5,9 +5,6 @@ import string
 import re
 import random
 
-SOS_token = 0
-EOS_token = 1
-
 class Lang:
     def __init__(self, name):
         self.name = name
@@ -65,6 +62,7 @@ def readLangs(lang1, lang2, reverse=False):
 
     return input_lang, output_lang, pairs
 
+
 MAX_LENGTH = 10
 
 eng_prefixes = (
@@ -84,12 +82,14 @@ def filterPair(p):
 def filterPairs(pairs):
     return [pair for pair in pairs if filterPair(pair)]
 
+
 def prepareData(lang1, lang2, reverse=False):
     input_lang, output_lang, pairs = readLangs(lang1, lang2, reverse)
     print("Read %s sentence pairs" % len(pairs))
     
     pairs = filterPairs(pairs)
     print("Trimmed to %s sentence pairs" % len(pairs))
+    print("The Sample pairs are %s" %pairs[0])
     
     print("Counting words...")
     for pair in pairs:

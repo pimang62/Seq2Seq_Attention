@@ -8,10 +8,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 import os
 import sys
 sys.path.append(os.pardir)
-from utils.preprocess import prepareData
-from models.encoders import EncoderRNN
-from models.attention import AttnDecoderRNN
 from eval import evaluate
+
 
 def showPlot(points):
     plt.figure()
@@ -41,25 +39,9 @@ def showAttention(input_sentence, output_words, attentions):
     plt.show()
 
 
-def evaluateAndShowAttention(input_sentence):
+def evaluateAndShowAttention(encoder, attndecoder, input_sentence):
     output_words, attentions = evaluate(
-        encoder1, attn_decoder1, input_sentence)
+        encoder, attndecoder, input_sentence)
     print('input =', input_sentence)
     print('output =', ' '.join(output_words))
     showAttention(input_sentence, output_words, attentions)
-
-if __name__ == '__main__':
-    
-    input_lang, output_lang, pairs = prepareData('eng', 'kor', True)
-    
-    hidden_size = 256
-    encoder1 = EncoderRNN(input_lang.n_words, hidden_size).to(device)
-    attn_decoder1 = AttnDecoderRNN(hidden_size, output_lang.n_words, dropout_p=0.1).to(device)
-        
-    evaluateAndShowAttention("hi, I am yelin")
-
-    evaluateAndShowAttention("something wrong")
-
-    evaluateAndShowAttention("I think I'm sleeping")
-
-    evaluateAndShowAttention("I have to go to sleep")

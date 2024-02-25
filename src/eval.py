@@ -1,7 +1,11 @@
 import torch
-from train import tensorFromSentence
-from utils.preprocess import prepareData
 import random
+
+import os
+import sys
+sys.path.append(os.pardir)
+
+from utils.dataloader import tensorFromSentence
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -12,11 +16,11 @@ EOS_token = 1
 import os
 import sys
 sys.path.append(os.pardir)
-from utils.preprocess import prepareData
-from models.encoders import EncoderRNN
-from models.attention import AttnDecoderRNN
 
-def evaluate(encoder, decoder, sentence, max_length=MAX_LENGTH):
+global input_lang, output_lang, pairs
+global hidden_size, encoder1, attn_decoder1
+
+def evaluate(input_lang, output_lang, encoder, decoder, sentence, max_length=MAX_LENGTH):
     with torch.no_grad():
         input_tensor = tensorFromSentence(input_lang, sentence)
         input_length = input_tensor.size()[0]
@@ -52,20 +56,12 @@ def evaluate(encoder, decoder, sentence, max_length=MAX_LENGTH):
         return decoded_words, decoder_attentions[:di + 1]
 
 
-def evaluateRandomly(encoder, decoder, n=10):
+def evaluateRandomly(input_lang, output_lang, pairs, encoder, decoder, n=10):
     for i in range(n):
         pair = random.choice(pairs)
         print('>', pair[0])
         print('=', pair[1])
-        output_words, attentions = evaluate(encoder, decoder, pair[0])
+        output_words, attentions = evaluate(input_lang, pairs, output_lang, encoder, decoder, pair[0])
         output_sentence = ' '.join(output_words)
         print('<', output_sentence)
         print('')
-
-if __name__ == '__main__':
-    
-    input_lang, output_lang, pairs = prepareData('eng', 'kor', True)
-    
-    hidden_size = 256
-    encoder1 = EncoderRNN(input_lang.n_words, hidden_size).to(device)
-    attn_decoder1 = AttnDecoderRNN(hidden_size, output_lang.n_words, dropout_p=0.1).to(device)

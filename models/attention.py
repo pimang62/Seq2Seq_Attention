@@ -26,17 +26,23 @@ class AttnDecoderRNN(nn.Module):
         embedded = self.dropout(embedded)
 
         attn_weights = F.softmax(
-            self.attn(torch.cat((embedded[0], hidden[0]), 1)), dim=1)
-        attn_applied = torch.bmm(attn_weights.unsqueeze(0),
+            self.attn(torch.cat((embedded[0], hidden[0]), 1)), dim=1)  # 1: EOS
+        # print(f'Attention Distribution shape is {attn_weights.shape}')  # torch.Size([1, 10])
+        # print(f'Encoder Outputs shape is {encoder_outputs.shape}')  # torch.Size([10, 256])
+        attn_applied = torch.bmm(attn_weights.unsqueeze(0),  # batch 두고 안쪽 matmul
                                  encoder_outputs.unsqueeze(0))
 
         output = torch.cat((embedded[0], attn_applied[0]), 1)
+        # print(f"Context + Attention dist vector shape is {output.shape}")  # torch.Size([1, 512])
         output = self.attn_combine(output).unsqueeze(0)
+        # print(f"Attention combined vector shape is {output.shape}")  # torch.Size([1, 1, 256])
 
         output = F.relu(output)
         output, hidden = self.gru(output, hidden)
+        # print(f"GRU output shape is {output.shape}")  # torch.Size([1, 1, 256])
 
         output = F.log_softmax(self.out(output[0]), dim=1)
+        # print(f"After log_softmax output shape is {output.shape}")  # torch.Size([1, 422]) : vocab_size
         return output, hidden, attn_weights
 
     def initHidden(self):

@@ -10,13 +10,13 @@ import time
 import os
 import sys
 sys.path.append(os.pardir)
-from utils.preprocess import prepareData
-from helper import asMinutes, timeSince
+from utils.dataloader import (
+    # indexesFromSentence,
+    # tensorFromSentence,
+    tensorsFromPair
+)
+from helper import timeSince
 from plot import showPlot
-
-from models.encoders import EncoderRNN
-from models.attention import AttnDecoderRNN
-from eval import evaluate, evaluateRandomly
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -24,26 +24,11 @@ MAX_LENGTH = 10
 SOS_token = 0
 EOS_token = 1
 
-def indexesFromSentence(lang, sentence):
-    return [lang.word2index[word] for word in sentence.split(' ')]
-
-
-def tensorFromSentence(lang, sentence):
-    indexes = indexesFromSentence(lang, sentence)
-    indexes.append(EOS_token)
-    return torch.tensor(indexes, dtype=torch.long, device=device).view(-1, 1)
-
-
-def tensorsFromPair(pair):
-    input_tensor = tensorFromSentence(input_lang, pair[0])
-    target_tensor = tensorFromSentence(output_lang, pair[1])
-    return (input_tensor, target_tensor)
-
-
 teacher_forcing_ratio = 0.5
 
 def train(input_tensor, target_tensor, encoder, decoder, encoder_optimizer, decoder_optimizer, criterion, max_length=MAX_LENGTH):
     encoder_hidden = encoder.initHidden()
+    # print(f"Encoder Hidden size is {encoder_hidden}")  # torch.Size([1, 1, 256])
 
     encoder_optimizer.zero_grad()
     decoder_optimizer.zero_grad()
@@ -93,7 +78,8 @@ def train(input_tensor, target_tensor, encoder, decoder, encoder_optimizer, deco
 
     return loss.item() / target_length
 
-def trainIters(encoder, decoder, n_iters, print_every=1000, plot_every=100, learning_rate=0.01):
+
+def trainIters(input_lang, output_lang, pairs, encoder, decoder, n_iters, print_every=1000, plot_every=100, learning_rate=0.01):
     start = time.time()
     plot_losses = []
     print_loss_total = 0  # print_every 마다 초기화
@@ -101,8 +87,11 @@ def trainIters(encoder, decoder, n_iters, print_every=1000, plot_every=100, lear
 
     encoder_optimizer = optim.SGD(encoder.parameters(), lr=learning_rate)
     decoder_optimizer = optim.SGD(decoder.parameters(), lr=learning_rate)
-    training_pairs = [tensorsFromPair(random.choice(pairs))
+    training_pairs = [tensorsFromPair(input_lang, output_lang, random.choice(pairs))
                       for i in range(n_iters)]
+    
+    # print(training_pairs[0])  # tuple([[eng]], [[kor]])
+    
     criterion = nn.NLLLoss()
 
     for iter in range(1, n_iters + 1):
@@ -127,21 +116,3 @@ def trainIters(encoder, decoder, n_iters, print_every=1000, plot_every=100, lear
             plot_loss_total = 0
 
     showPlot(plot_losses)
-
-
-if __name__ == '__main__':
-    
-    input_lang, output_lang, pairs = prepareData('eng', 'kor', True)
-    
-    hidden_size = 256
-    encoder1 = EncoderRNN(input_lang.n_words, hidden_size).to(device)
-    attn_decoder1 = AttnDecoderRNN(hidden_size, output_lang.n_words, dropout_p=0.1).to(device)
-
-    trainIters(encoder1, attn_decoder1, 75000, print_every=5000)
-    
-    evaluateRandomly(encoder1, attn_decoder1)
-    
-    output_words, attentions = evaluate(
-        encoder1, attn_decoder1, "je suis trop froid .")
-    
-    plt.matshow(attentions.numpy())
