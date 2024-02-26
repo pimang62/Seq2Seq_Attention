@@ -40,6 +40,7 @@ def main():
 
     output_sentence, attentions = evaluateRandomly(input_lang, output_lang, pairs, encoder1, attn_decoder1)
     
+    """infer"""
     print(output_sentence)
     plt.matshow(attentions.numpy())
     
