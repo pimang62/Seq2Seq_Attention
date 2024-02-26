@@ -3,7 +3,7 @@ import random
 
 import os
 import sys
-sys.path.append(os.pardir)
+sys.path.append('../..')
 
 from utils.dataloader import tensorFromSentence
 
@@ -61,7 +61,8 @@ def evaluateRandomly(input_lang, output_lang, pairs, encoder, decoder, n=10):
         pair = random.choice(pairs)
         print('>', pair[0])
         print('=', pair[1])
-        output_words, attentions = evaluate(input_lang, pairs, output_lang, encoder, decoder, pair[0])
+        output_words, attentions = evaluate(input_lang, output_lang, encoder, decoder, pair[0])
         output_sentence = ' '.join(output_words)
         print('<', output_sentence)
         print('')
+    return output_sentence, attentions

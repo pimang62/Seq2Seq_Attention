@@ -39,9 +39,9 @@ def showAttention(input_sentence, output_words, attentions):
     plt.show()
 
 
-def evaluateAndShowAttention(encoder, attndecoder, input_sentence):
+def evaluateAndShowAttention(input_lang, output_lang, encoder, attndecoder, input_sentence):
     output_words, attentions = evaluate(
-        encoder, attndecoder, input_sentence)
+        input_lang, output_lang, encoder, attndecoder, input_sentence)
     print('input =', input_sentence)
     print('output =', ' '.join(output_words))
     showAttention(input_sentence, output_words, attentions)

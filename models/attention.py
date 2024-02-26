@@ -26,7 +26,7 @@ class AttnDecoderRNN(nn.Module):
         embedded = self.dropout(embedded)
 
         attn_weights = F.softmax(
-            self.attn(torch.cat((embedded[0], hidden[0]), 1)), dim=1)  # 1: EOS
+            self.attn(torch.cat((embedded[0], hidden[0]), 1)), dim=1)
         # print(f'Attention Distribution shape is {attn_weights.shape}')  # torch.Size([1, 10])
         # print(f'Encoder Outputs shape is {encoder_outputs.shape}')  # torch.Size([10, 256])
         attn_applied = torch.bmm(attn_weights.unsqueeze(0),  # batch 두고 안쪽 matmul
