@@ -18,7 +18,7 @@ class BahdanauAttention(nn.Module):
     def forward(self, query, keys):
         scores = self.Va(torch.tanh(self.Wa(query) + self.Ua(keys)))
         # print(f"Original scores shape is {scores.shape}")  # torch.Size([32, 10, 1])
-        scores = scores.squeeze(2).unsqueeze(1)
+        scores = scores.squeeze(2).unsqueeze(1)  # .permute(scores, (0, 2, 1))
         # print(f"Transformed scores shape is {scores.shape}")  # torch.Size([32, 1, 10])
 
         weights = F.softmax(scores, dim=-1)
