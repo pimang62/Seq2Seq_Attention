@@ -8,8 +8,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 import os
 import sys
 sys.path.append(os.pardir)
+from utils.preprocess import normalizeString
 from eval import evaluate
-
 
 def showPlot(points):
     plt.figure()
@@ -40,6 +40,7 @@ def showAttention(input_sentence, output_words, attentions):
 
 
 def evaluateAndShowAttention(input_lang, output_lang, encoder, attndecoder, input_sentence):
+    input_sentence = normalizeString(input_sentence)
     output_words, attentions = evaluate(
         input_lang, output_lang, encoder, attndecoder, input_sentence)
     print('input =', input_sentence)

@@ -29,7 +29,7 @@ hidden_size, encoder1, attn_decoder1 = None, None, None
 
 def main():
     global input_lang, output_lang, pairs
-    input_lang, output_lang, pairs = prepareData('eng', 'kor', True)
+    input_lang, output_lang, pairs = prepareData('eng', 'kor', False)
     
     global hidden_size, encoder1, attn_decoder1
     hidden_size = 256
@@ -38,7 +38,7 @@ def main():
 
     trainIters(input_lang, output_lang, pairs, encoder1, attn_decoder1, 75000, print_every=5000)
 
-    evaluateRandomly(input_lang, output_lang, pairs, encoder1, attn_decoder1)
+    # evaluateRandomly(input_lang, output_lang, pairs, encoder1, attn_decoder1)
     
     """infer"""
     evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "I am jerk.")

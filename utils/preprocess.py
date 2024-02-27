@@ -37,8 +37,8 @@ def unicodeToAscii(s):
 # 소문자, 다듬기, 그리고 문자가 아닌 문자 제거
 def normalizeString(s):
     s = unicodeToAscii(s.lower().strip())
-    s = re.sub(r"([.!?])", r" \1", s)
-    s = re.sub(r"[^a-zA-Z.!?]+", r" ", s)
+    s = re.sub(r"([.!?,'])", r" \1", s)
+    # s = re.sub(r"[^a-zA-Z.!?]+", r" ", s)
     return s
 
 def readLangs(lang1, lang2, reverse=False):
@@ -109,10 +109,10 @@ if __name__ == '__main__':
     """
     Reading lines...
     Read 5892 sentence pairs
-    Trimmed to 340 sentence pairs
+    Trimmed to 62 sentence pairs
+    The Sample pairs are ['he is nice .', '걔 괜찮아 .']
     Counting words...
     Counted words:
-    kor 7
-    eng 422
-    [' .', 'i m at home .']
+    eng 132
+    kor 149
     """
