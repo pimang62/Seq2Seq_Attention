@@ -38,19 +38,16 @@ def main():
 
     trainIters(input_lang, output_lang, pairs, encoder1, attn_decoder1, 75000, print_every=5000)
 
-    output_sentence, attentions = evaluateRandomly(input_lang, output_lang, pairs, encoder1, attn_decoder1)
+    evaluateRandomly(input_lang, output_lang, pairs, encoder1, attn_decoder1)
     
     """infer"""
-    print(output_sentence)
-    plt.matshow(attentions.numpy())
-    
-    evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "hi, I am Ashley")
+    evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "I am jerk.")
 
-    evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "something wrong")
+    # evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "something wrong")
 
-    evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "I think I'm sleeping")
+    # evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "I think I'm sleeping")
 
-    evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "I have to go to sleep")
+    evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "I go to sleep!")
     
 
 if __name__ == '__main__':

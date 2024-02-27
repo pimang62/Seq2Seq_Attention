@@ -6,6 +6,7 @@ import sys
 sys.path.append('../..')
 
 from utils.dataloader import tensorFromSentence
+from utils.preprocess import normalizeString
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -22,6 +23,7 @@ global hidden_size, encoder1, attn_decoder1
 
 def evaluate(input_lang, output_lang, encoder, decoder, sentence, max_length=MAX_LENGTH):
     with torch.no_grad():
+        sentence = normalizeString(sentence)
         input_tensor = tensorFromSentence(input_lang, sentence)
         input_length = input_tensor.size()[0]
         encoder_hidden = encoder.initHidden()
@@ -65,4 +67,3 @@ def evaluateRandomly(input_lang, output_lang, pairs, encoder, decoder, n=10):
         output_sentence = ' '.join(output_words)
         print('<', output_sentence)
         print('')
-    return output_sentence, attentions
