@@ -41,7 +41,7 @@ def main():
     # evaluateRandomly(input_lang, output_lang, pairs, encoder1, attn_decoder1)
     
     """infer"""
-    evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "I am jerk.")
+    evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "I am nice.")
 
     # evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "something wrong")
 
