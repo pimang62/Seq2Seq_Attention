@@ -41,13 +41,13 @@ def main():
     # evaluateRandomly(input_lang, output_lang, pairs, encoder1, attn_decoder1)
     
     """infer"""
-    evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "I am jerk.")
+    evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "I am")
 
     # evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "something wrong")
 
     # evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "I think I'm sleeping")
 
-    evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "I go to sleep!")
+    evaluateAndShowAttention(input_lang, output_lang, encoder1, attn_decoder1, "he is")
     
 
 if __name__ == '__main__':
